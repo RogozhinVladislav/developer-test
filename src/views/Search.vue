@@ -1,11 +1,15 @@
 <template>
   <div class="search-results">
-    <div v-if="searchJokes.length > 0">
-      <joke-item v-for="joke in searchJokes" :key="joke.id" :joke="joke"></joke-item>
-    </div>
-    <div v-else-if="loading" class="nothing-found-message">Loading...</div>
-    <div v-else-if="!loading && error" class="nothing-found-message">{{error}}</div>
-    <div v-else-if="!loading && searchJokes.length === 0" class="nothing-found-message">Nothing found</div>
+    <transition name="fade">
+      <div v-if="!loading">
+        <div v-if="searchJokes.length > 0">
+        <joke-item v-for="joke in searchJokes" :key="joke.id" :joke="joke" />
+        </div>
+        <div v-else-if="!loading && error" class="nothing-found-message">{{error}}</div>
+        <div v-else-if="!loading && searchJokes.length === 0" class="nothing-found-message">Nothing found</div>
+      </div>
+    </transition>
+    <div v-if="loading">Loading...</div>
   </div>
 </template>
 <script>

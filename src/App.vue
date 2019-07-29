@@ -8,11 +8,17 @@
         v-model="query"
       />
       <div class="search-buttons">
-        <button class="search-btn btn">Search</button>
-        <button class="clear-btn btn" @click.prevent="clearQuery">Clear</button>
+        <button type="reset" class="clear-btn" @click.prevent="clearQuery">
+          <img src="./assets/clear.svg" alt="Clear" title="Clear">
+        </button>
+        <button type="submit" class="search-btn">
+          <img src="./assets/search.svg" alt="Search" title="Search">
+        </button>
       </div>
     </form>
-    <router-view/>
+    <transition name="page" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 <script>
@@ -78,6 +84,7 @@ body {
 
 .search-wrapper {
   display: flex;
+  position: relative;
   width: 100%;
   margin: 0 auto 10px;
 }
@@ -92,12 +99,47 @@ body {
   border-radius: 4px;
 }
 
+
 .search-buttons {
   display: flex;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+  padding-right: 15px;
+  height: 100%;
 
-  .btn {
-    width: 100px;
+  button {
+    color: #fff;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    outline: none;
+
+    img {
+      width: 23px;
+    }
+  }
+
+  .search-btn {
+    padding: 5px;
+
+    img {
+      width: 23px;
+    }
+  }
+
+  .clear-btn {
+    margin-right: 7px;
+    padding: 5px;
+
+    img {
+      width: 15px;
+    }
   }
 }
 
@@ -108,6 +150,32 @@ body {
     height: 100%;
   }
   
+}
+
+.page-enter-active, .page-leave-active {
+  transition: opacity .5s, transform .5s;
+}
+.page-enter, .page-leave-to {
+  opacity: 0;
+  transform: translateX(-30%);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-leave-active,
+.slide-enter-active {
+  transition: .5s;
+}
+.slide-enter {
+  transform: translate(100%, 0);
+}
+.slide-leave-to {
+  transform: translate(-100%, 0);
 }
 
 </style>

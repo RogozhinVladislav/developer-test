@@ -6,44 +6,48 @@
         <div class="select-arrow">+</div>
       </div>
 
-      <ul class="categories" v-show="windowWidth > 768 || showCategories">
-        <li :key="`all`" :class="{active: selectedCategory === false}" class="category">
-          <input
-            id="all"
-            type="radio"
-            :value="false"
-            v-model="selectedCategory"
-            @change="toggleCategory"
-            class="category-input"
-          />
-          <label for="all" class="category-name">all</label>
-        </li>
-        <li
-          v-for="(category, index) in categories"
-          :key="`category-${index}`"
-          :class="{active: category === selectedCategory}"
-          class="category"
-        >
-          <input
-            :id="category"
-            type="radio"
-            :value="category"
-            v-model="selectedCategory"
-            @change="toggleCategory"
-            class="category-input"
-          />
-          <label :for="category" class="category-name">{{category}}</label>
-        </li>
-      </ul>
+      <transition name="slide">
+        <ul class="categories" v-if="showCategories || windowWidth > 768">
+          <li :key="`all`" :class="{active: selectedCategory === false}" class="category">
+            <input
+              id="all"
+              type="radio"
+              :value="false"
+              v-model="selectedCategory"
+              @change="toggleCategory"
+              class="category-input"
+            />
+            <label for="all" class="category-name">all</label>
+          </li>
+          <li
+            v-for="(category, index) in categories"
+            :key="`category-${index}`"
+            :class="{active: category === selectedCategory}"
+            class="category"
+          >
+            <input
+              :id="category"
+              type="radio"
+              :value="category"
+              v-model="selectedCategory"
+              @change="toggleCategory"
+              class="category-input"
+            />
+            <label :for="category" class="category-name">{{category}}</label>
+          </li>
+        </ul>
+      </transition>
     </div>
     <div class="random-joke-wrapper">
-      <div class="random-joke">
-        <div class="chuck"></div>
-        <h2 class="random-joke-text">{{randomJoke && randomJoke.value}}</h2>
-        <div class="refresh-btn-wrapper">
-          <button class="random-joke-refresh-btn btn" @click="refreshJoke">Refresh</button>
+      <transition name="fade">
+        <div v-if="!loading" class="random-joke">
+          <div class="chuck"></div>
+          <h2 class="random-joke-text">{{randomJoke && randomJoke.value}}</h2>
+          <div class="refresh-btn-wrapper">
+            <button class="random-joke-refresh-btn btn" @click="refreshJoke">Refresh</button>
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -216,7 +220,7 @@ export default {
   }
 
   .random-joke-wrapper {
-    padding: 10px;
+    padding: 10px 10px 60px 10px;
   }
 
   .categories-wrapper {
@@ -224,16 +228,15 @@ export default {
   }
 
   .select-button {
-    display: block;
+    display: flex;
+    justify-content: space-between;
   }
 
   .categories {
-    position: absolute;
+    position: fixed;
     top: 160px;
-    right: 0;
-    left: 0;
-    width: 100%;
-    margin: 0 auto;
+    width: 100vw;
+    height: 100vh;
     background-color: #fff;
     border-radius: 4px;
     z-index: 2;
@@ -248,8 +251,11 @@ export default {
     align-items: center;
     justify-content: center;
     height: 60px;
+    background-color: #ffffff;
+    box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
   }
 }
+
 </style>
 
