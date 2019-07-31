@@ -1,71 +1,61 @@
 <template>
   <div class="search-results">
-    <transition name="fade">
-      <div v-if="!loading">
-        <div v-if="searchJokes.length > 0">
-        <joke-item v-for="joke in searchJokes" :key="joke.id" :joke="joke" />
-        </div>
-        <div v-else-if="!loading && error" class="nothing-found-message">{{error}}</div>
-        <div v-else-if="!loading && searchJokes.length === 0" class="nothing-found-message">Nothing found</div>
+    <div v-if="!loading">
+      <div v-if="searchJokes.length > 0">
+        <joke-item 
+          v-for="joke in searchJokes" 
+          :key="joke.id" 
+          :joke="joke" 
+        />
       </div>
-    </transition>
+      <div v-else-if="!loading && error" class="search-message">{{error}}</div>
+      <div
+        v-else-if="!loading && searchJokes.length === 0"
+        class="search-message"
+      >
+        Nothing found
+      </div>
+    </div>
     <div v-if="loading">Loading...</div>
   </div>
 </template>
 <script>
-import JokeItem from "@/components/JokeItem.vue";
+import { mapGetters } from "vuex"
+import JokeItem from "@/components/JokeItem.vue"
 
 export default {
-  name: "search",
+  name: "Search",
   props: {
-    query: String
-  },
-  data() {
-    return {
-      query: ""
-    };
+    query: String,
+    default: ""
   },
   methods: {
     fetchJokes() {
-      this.$store.dispatch("fetchJokesByQuery", this.$route.params.query);
+      this.$store.dispatch('fetchJokesByQuery', this.$route.params.query)
     }
   },
   mounted() {
     this.fetchJokes()
   },
   computed: {
-    loading() {
-      return this.$store.getters.loading;
-    },
-    error() {
-      return this.$store.getters.error;
-    },
-    searchJokes() {
-      return this.$store.getters.searchJokes;
-    }
-    // paginate (pageNumber) {
-    //   const array = this.searchJokes
-    //   const pageSize = 100
-    //   --pageNumber
-    //   return array.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
-    // }
+    ...mapGetters(['loading', 'error', 'searchJokes'])
   },
   watch: {
-    '$route' (to, from) {
+    $route() {
       this.fetchJokes()
     }
   },
   components: {
     JokeItem
   }
-};
+}
 </script>
 <style lang="scss">
 .search-results {
   padding: 20px 10px;
 }
 
-.nothing-found-message {
+.search-message {
   text-align: center;
   font-size: 20px;
 }

@@ -12,7 +12,7 @@ class Joke {
 
 export default {
   state: {
-    randomJoke: null,
+    randomJoke: {},
     searchJokes: [],
     categories: []
   },
@@ -23,39 +23,33 @@ export default {
     setSearchJokes (state, payLoad) {
       state.searchJokes = payLoad
     },
+    clearSearchJokes (state) {
+      state.searchJokes = []
+    },
     setCategories (state, payLoad) {
       state.categories = payLoad
     }
   },
   actions: {
     async fetchRandomJoke ({ commit }, payLoad) {
-      commit('clearError')
-      commit('setLoading', true)
       try {
         const response = await api.fetchRandomJoke(payLoad)
         if (!response.ok) return
         const responseJson = await response.json()
         commit('setRandomJoke', new Joke(responseJson))
-        commit('setLoading', false)
       } catch (error) {
-        commit('setLoading', false)
-        commit('setError', error.message)
         throw error
       }
     },
     async fetchJokesByQuery ({ commit }, payload) {
       commit('clearError')
+      commit('clearSearchJokes')
       commit('setLoading', true)
       try {
         const response = await api.fetchJokesByQuery(payload)
         const responseJson = await response.json()
         if (response.status === 400) throw new Error(responseJson.message)
-        let { result } = responseJson
-        const { total } = responseJson
-        if (total > 100) {
-          const shuffled = result.sort(() => 0.5 - Math.random())
-          result = shuffled.slice(0, 100)
-        }
+        const { result } = responseJson
         commit('setSearchJokes', result.map(item => new Joke(item)))
         commit('setLoading', false)
       } catch (error) {
@@ -70,21 +64,14 @@ export default {
         if (!response.ok) return
         const responseJson = await response.json()
         commit('setCategories', responseJson)
-        commit('setLoading', false)
       } catch (error) {
         throw error
       }
     }
   },
   getters: {
-    randomJoke (state) {
-      return state.randomJoke
-    },
-    searchJokes (state) {
-      return state.searchJokes
-    },
-    categories (state) {
-      return state.categories
-    }
+    randomJoke: state => state.randomJoke,
+    searchJokes: state => state.searchJokes,
+    categories: state => state.categories
   }
 }

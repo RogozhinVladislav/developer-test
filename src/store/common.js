@@ -15,22 +15,12 @@ export default {
     }
   },
   actions: {
-    setLoading ({ commit }, payLoad) {
-      commit('setLoading', payLoad)
-    },
-    setError ({ commit }, payLoad) {
-      commit('setError', payLoad)
-    },
-    clearError ({ commit }) {
-      commit('clearError')
-    }
+    setLoading: ({ commit }, payLoad) => commit('setLoading', payLoad),
+    setError: ({ commit }, payLoad) => commit('setError', payLoad),
+    clearError: ({ commit }) => commit('clearError')
   },
   getters: {
-    loading (state) {
-      return state.loading
-    },
-    error (state) {
-      return state.error
-    }
+    loading: state => state.loading,
+    error: state => state.error
   }
 }

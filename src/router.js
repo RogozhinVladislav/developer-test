@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Random from './views/Random.vue'
+import RandomJoke from './views/RandomJoke.vue'
 import Search from './views/Search.vue'
 
 Vue.use(Router)
@@ -12,7 +12,7 @@ export default new Router({
     {
       path: '/',
       name: 'random',
-      component: Random
+      component: RandomJoke
     },
     {
       path: '/:query',
